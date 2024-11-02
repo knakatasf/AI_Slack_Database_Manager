@@ -18,9 +18,9 @@
 
 import mysql.connector
 from mysql.connector import Error
+import os
 
 from dotenv import load_dotenv
-import os
 
 def connect():
     load_dotenv()
@@ -30,8 +30,8 @@ def connect():
         connection = mysql.connector.connect(
             host='localhost',  # Replace with your host, e.g., '127.0.0.1' or a Docker container name
             user=os.getenv("MYSQL_USER").strip(),  # Replace with your MySQL username
-            password= os.getenv("MYSQL_PASSWORD").strip(),  # Replace with your MySQL password
-            database=os.getenv("MYSQL_DB").strip()  # Replace with the name of your database
+            password=os.getenv("MYSQL_PASSWORD"),  # Replace with your MySQL password
+            database=os.getenv("MYSQL_DATABASE")  # Replace with the name of your database
         )
 
         if connection.is_connected():
@@ -40,8 +40,8 @@ def connect():
     except Error as e:
         print("Error while connecting to MySQL", e)
 
-    finally:
-        if connection.is_connected():
-            connection.close()
-            print("MySQL connection is closed")
+    # finally:
+    #     if connection.is_connected():
+    #         connection.close()
+    #         print("MySQL connection is closed")
 

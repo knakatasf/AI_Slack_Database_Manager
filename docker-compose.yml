@@ -5,10 +5,10 @@ services:
     image: mysql:latest
     container_name: slackbot-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: slackbot_db
-      MYSQL_USER: slackbot_user
-      MYSQL_PASSWORD: slackbot_password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
