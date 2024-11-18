@@ -22,7 +22,6 @@ def respond(event, say):
     user_id = event["user"]
     user_input = event["text"]
     client = ai_service.analyze_input(user_input)
-    ai_service.print_client(client)
 
     say(f"Hi <@{user_id}>, I'm a Slack Bot! This is what I extracted: \n{client}")
 
