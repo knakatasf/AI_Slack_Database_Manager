@@ -6,13 +6,15 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from groq import Groq
 
-import ai_service
-import db_manager
+from app import ai_service
 
 load_dotenv()
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN").strip()
 SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN").strip()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY").strip()
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_DB = os.getenv("MYSQL_DB")
 
 app = App(token=SLACK_BOT_TOKEN)
 groq = Groq(api_key=GROQ_API_KEY)
@@ -21,12 +23,15 @@ groq = Groq(api_key=GROQ_API_KEY)
 def respond(event, say):
     user_id = event["user"]
     user_input = event["text"]
-    client = ai_service.analyze_input(user_input)
+    message = ai_service.analyze_input(user_input)
 
-    say(f"Hi <@{user_id}>, I'm a Slack Bot! This is what I extracted: \n{client}")
-
+    say(f"Hi <@{user_id}>, I'm an AI Database Manager! \n{message}")
 
 if __name__ == '__main__':
-    db_manager.connect()
     SocketModeHandler(app, SLACK_APP_TOKEN).start()
+
+
+
+
+
 
