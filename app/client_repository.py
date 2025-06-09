@@ -1,6 +1,6 @@
+from typing import List
 from sqlalchemy.orm import Session
-from ai_service import ClientSchema
-from model import ClientDAO
+from client_dao import ClientDAO
 
 
 class ClientRepository:
@@ -22,14 +22,30 @@ class ClientRepository:
     def find_by_id(self, id: int) -> ClientDAO:
         return self.db.query(ClientDAO).get(id)
 
-    def find_by_name(self, name: str) -> [ClientDAO]:
-        return self.db.query(ClientDAO).filter(ClientDAO.name == name)
+    def _find_like(self, column, value: str) -> List[ClientDAO]:
+        pattern = f"%{value}%"
+        return self.db.query(ClientDAO).filter(column.ilike(pattern)).all()
 
-    def find_by_address(self, address: str) -> [ClientDAO]:
-        return self.db.query(ClientDAO).filter(ClientDAO.address == address)
+    def find_by_name(self, name: str) -> List[ClientDAO]:
+        return self._find_like(ClientDAO.name, name)
 
-    def find_by_email_address(self, email_address: str) -> [ClientDAO]:
-        return self.db.query(ClientDAO).filter(ClientDAO.email_address == email_address)
+    def find_by_address(self, address: str) -> List[ClientDAO]:
+        return self._find_like(ClientDAO.address, address)
 
-    def find_by_phone_number(self, phone_number: str) -> [ClientDAO]:
-        return self.db.query(ClientDAO).filter(ClientDAO.phone_number == phone_number)
+    def find_by_email_address(self, email_address: str) -> List[ClientDAO]:
+        return self._find_like(ClientDAO.email_address, email_address)
+
+    def find_by_phone_number(self, phone_number: str) -> List[ClientDAO]:
+        return self._find_like(ClientDAO.phone_number, phone_number)
+
+    def update(self, id: int, update_field: str, update_value: str) -> ClientDAO:
+        target_client = self.find_by_id(id)
+        if target_client is None:
+            raise ValueError(f"No client found with id={id}")
+
+        setattr(target_client, update_field, update_value)
+
+        self.db.commit()
+        self.db.refresh()
+
+        return target_client

@@ -13,3 +13,11 @@ class ClientDAO(Base):
     address = Column(String(255), nullable=False)
     email_address = Column(String(255), nullable=False)
     phone_number = Column(String(255), nullable=False)
+
+    def __repr__(self):
+        return f"""
+        Client: {self.name}
+        Address: {self.address}
+        Email Address: {self.email_address}
+        Phone: {self.phone_number}
+        """
